@@ -2,7 +2,7 @@ pipeline {
     agent { label 'New Node' }  // Use your Jenkins agent named "New Node"
     
     tools {
-        jdk 'JDK17'        // Make sure JDK17 is configured under Jenkins -> Global Tool Configuration
+        jdk 'Java21'        // Make sure JDK17 is configured under Jenkins -> Global Tool Configuration
         maven 'Maven3'     // Make sure Maven is configured too
     }
 
