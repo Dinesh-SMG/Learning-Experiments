@@ -1,37 +1,49 @@
 pipeline {
-    agent { label 'New Node' }  // Use your Jenkins agent named "New Node"
-    
+    agent { label 'New Node' }  // Run on your specific agent
+
     tools {
-        jdk 'Java21'        // Make sure JDK17 is configured under Jenkins -> Global Tool Configuration
-        maven 'Maven3'     // Make sure Maven is configured too
+        jdk 'Java21'  // Use your installed JDK
     }
 
     stages {
         stage('Checkout Code') {
             steps {
+                // Pull source code from GitHub
                 git branch: 'main', url: 'git@github.com:Dinesh-SMG/Learning-Experiments.git'
             }
         }
 
-        stage('Build with Maven') {
+        stage('Compile Java') {
             steps {
-                sh 'mvn clean package -DskipTests'
+                // Compile the Java file
+                sh 'javac largestno.java'
+            }
+        }
+
+        stage('Create Executable JAR') {
+            steps {
+                // Create a manifest specifying the main class
+                sh '''
+                    echo "Main-Class: largestno" > manifest.txt
+                    jar cfm largestno.jar manifest.txt largestno.class
+                '''
             }
         }
 
         stage('Archive JAR') {
             steps {
-                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+                // Archive the JAR so you can download it from Jenkins
+                archiveArtifacts artifacts: 'largestno.jar', fingerprint: true
             }
         }
     }
 
     post {
         success {
-            echo '✅ Build successful! The JAR file has been archived and is available for download.'
+            echo '✅ JAR created successfully! Check Build Artifacts.'
         }
         failure {
-            echo '❌ Build failed! Please check the console output.'
+            echo '❌ Build failed! Check console output.'
         }
     }
 }
