@@ -24,8 +24,8 @@ pipeline {
             steps {
                 // Create a manifest specifying the main class
                 sh '''
-                    echo "Main-Class: largestno" > manifest.txt
-                    jar cfm largestno.jar manifest.txt largestno.class
+                    echo "Main-Class: Largest" > manifest.txt
+                    jar cfm Largest.jar manifest.txt Largest.class
                 '''
             }
         }
@@ -33,7 +33,7 @@ pipeline {
         stage('Archive JAR') {
             steps {
                 // Archive the JAR so you can download it from Jenkins
-                archiveArtifacts artifacts: 'largestno.jar', fingerprint: true
+                archiveArtifacts artifacts: 'Largest.jar', fingerprint: true
             }
         }
     }
