@@ -16,7 +16,7 @@ pipeline {
         stage('Compile Java') {
             steps {
                 // Compile the Java file
-                sh 'javac largestno.java'
+                sh 'javac Largest.java'
             }
         }
 
