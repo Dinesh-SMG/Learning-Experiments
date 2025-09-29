@@ -1,0 +1,26 @@
+package com.example;
+
+import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import javax.servlet.*;
+import javax.servlet.http.*;
+
+public class CurrentTimeServlet extends HttpServlet {
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        response.setContentType("text/html");
+
+        LocalDateTime now = LocalDateTime.now();
+        String formattedTime = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+        PrintWriter out = response.getWriter();
+        out.println("<html><body>");
+        out.println("<h1>Current Server Time:</h1>");
+        out.println("<p>" + formattedTime + "</p>");
+        out.println("</body></html>");
+    }
+}
