@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent { label 'Maven' }
 
     tools {
         maven 'Maven3' // Replace with your exact Maven installation name in Jenkins
