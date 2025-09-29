@@ -10,15 +10,14 @@
   <packaging>war</packaging>
 
   <dependencies>
-    <!-- Servlet API -->
+    <!-- Servlet API (provided by Tomcat) -->
     <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-      <version>4.0.1</version>
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
+      <version>5.0.0</version>
       <scope>provided</scope>
     </dependency>
 
-    <!-- JUnit for Testing -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -29,20 +28,18 @@
 
   <build>
     <finalName>CurrentTimeApp</finalName>
-
     <plugins>
-      <!-- ✅ Upgrade compiler plugin and set source/target version -->
+      <!-- ✅ Compiler Plugin with Java 21 -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.11.0</version>
         <configuration>
-          <source>11</source>  <!-- Change to 17 if Jenkins uses Java 17 -->
-          <target>11</target>
+          <release>21</release> <!-- ✅ Modern way: matches your JDK version -->
         </configuration>
       </plugin>
 
-      <!-- ✅ WAR Plugin (for web applications) -->
+      <!-- WAR plugin to package web app -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
