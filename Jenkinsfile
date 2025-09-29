@@ -1,49 +1,45 @@
 pipeline {
-    agent { label 'New Node' }  // Run on your specific agent
+    agent any
 
     tools {
-        jdk 'Java21'  // Use your installed JDK
+        maven 'Maven'  // Name must match your Jenkins Maven installation
+    }
+
+    environment {
+        TOMCAT_URL = 'http://54.89.151.231:8080'  // Your Tomcat EC2 instance public IP
     }
 
     stages {
-        stage('Checkout Code') {
+        stage('Checkout') {
             steps {
-                // Pull source code from GitHub
-                git branch: 'main', url: 'git@github.com:Dinesh-SMG/Learning-Experiments.git'
+                git branch: 'main',
+                    url: 'https://github.com/Dinesh-SMG/Learning-Experiments.git'
             }
         }
 
-        stage('Compile Java') {
+        stage('Build with Maven') {
             steps {
-                // Compile the Java file
-                sh 'javac Largest.java'
+                sh 'mvn clean package -DskipTests'
             }
         }
 
-        stage('Create Executable JAR') {
+        stage('Deploy to Tomcat') {
             steps {
-                // Create a manifest specifying the main class
-                sh '''
-                    echo "Main-Class: Largest" > manifest.txt
-                    jar cfm Largest.jar manifest.txt Largest.class
-                '''
-            }
-        }
-
-        stage('Archive JAR') {
-            steps {
-                // Archive the JAR so you can download it from Jenkins
-                archiveArtifacts artifacts: 'Largest.jar', fingerprint: true
+                deploy adapters: [tomcat8(
+                    credentialsId: 'tomcat-user', // Your Jenkins credentials ID for Tomcat user
+                    path: '',
+                    url: "${env.TOMCAT_URL}"
+                )], contextPath: 'myapp', war: '**/target/*.war'
             }
         }
     }
 
     post {
         success {
-            echo '✅ JAR created successfully! Check Build Artifacts.'
+            echo "✅ Build & Deployment Successful! Visit ${env.TOMCAT_URL}/myapp"
         }
         failure {
-            echo '❌ Build failed! Check console output.'
+            echo "❌ Build or Deployment Failed!"
         }
     }
 }
